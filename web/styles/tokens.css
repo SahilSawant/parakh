@@ -1,0 +1,117 @@
+/* ============================================================
+   PARAKH (परख) — Design tokens v1
+   Engineering-consumable CSS variables. Source of truth: Design Tokens.dc.html
+   Political-neutrality audit: no saffron/orange semantics, no green
+   counterpart, no red/sky-blue axis poles, no tricolor combos. (§3)
+   ============================================================ */
+
+:root {
+  /* ---------- Brand ---------- */
+  --pk-brand: #0E8583;            /* app-chrome accent; distinct shade from axis teal */
+  --pk-brand-strong: #0A6E6C;
+  --pk-brand-tint: #E3F1F0;
+
+  /* ---------- Government-alignment axis (teal ↔ plum) ----------
+     Buckets: pro-establishment → critical. Equal L/C poles — neither
+     side is the "warning" color. Mixed = neutral warm gray. */
+  --pk-govt-pro:        #177574;  /* Pro-establishment */
+  --pk-govt-lean-pro:   #6BA8A4;  /* Lean pro */
+  --pk-govt-mixed:      #A8A29B;  /* Mixed / center */
+  --pk-govt-lean-crit:  #A98BB5;  /* Lean critical */
+  --pk-govt-crit:       #7B4E8E;  /* Critical */
+
+  /* ---------- Ideology axis (indigo ↔ amber-brown) ----------
+     Distinct family from govt axis so the two are never confused. */
+  --pk-ideo-left:       #4F5AA8;  /* Left */
+  --pk-ideo-lean-left:  #8F96C9;  /* Lean left */
+  --pk-ideo-center:     #A8A29B;  /* Centre */
+  --pk-ideo-lean-right: #C09A6B;  /* Lean right */
+  --pk-ideo-right:      #9A6A2E;  /* Right */
+
+  /* ---------- Factuality (the one traffic-light scale) ---------- */
+  --pk-fact-very-high:  #1E7A44;
+  --pk-fact-high:       #6E9E4F;
+  --pk-fact-mixed:      #C9A227;
+  --pk-fact-low:        #C2622B;
+  --pk-fact-very-low:   #B3402E;
+  --pk-fact-pending:    #A8A29B;
+
+  /* ---------- Blindspot ---------- */
+  --pk-blindspot-bg:    #2B2E33;  /* dark slate — never a pole color */
+  --pk-blindspot-fg:    #FFFFFF;
+
+  /* ---------- Neutrals — light ---------- */
+  --pk-bg:              #FBFAF8;
+  --pk-surface:         #FFFFFF;
+  --pk-surface-2:       #F1EFEA;
+  --pk-border:          #E4E1DB;
+  --pk-border-strong:   #CFCAC2;
+  --pk-text:            #1C1B1A;
+  --pk-text-2:          #55514C;
+  --pk-text-3:          #807A73;
+
+  /* ---------- Type ---------- */
+  --pk-font-ui:   'Noto Sans', system-ui, sans-serif;
+  --pk-font-dev:  'Noto Sans Devanagari', 'Noto Sans', sans-serif;
+  --pk-font-mono: 'Noto Sans Mono', monospace;
+
+  --pk-text-display: 600 28px/1.25 var(--pk-font-ui);   /* story title mobile */
+  --pk-text-display-lg: 600 36px/1.2 var(--pk-font-ui); /* story title desktop */
+  --pk-text-title:   600 20px/1.35 var(--pk-font-ui);
+  --pk-text-headline: 500 16px/1.45 var(--pk-font-ui);  /* card headlines */
+  --pk-text-body:    400 15px/1.55 var(--pk-font-ui);
+  --pk-text-caption: 400 13px/1.45 var(--pk-font-ui);
+  --pk-text-micro:   500 11px/1.35 var(--pk-font-ui);
+  /* Devanagari: same sizes, line-height +0.15 (e.g. body 1.7) —
+     matra stack needs headroom. Never letter-space Devanagari. */
+
+  /* ---------- Spacing / radii ---------- */
+  --pk-sp-1: 4px;  --pk-sp-2: 8px;  --pk-sp-3: 12px; --pk-sp-4: 16px;
+  --pk-sp-5: 20px; --pk-sp-6: 24px; --pk-sp-8: 32px; --pk-sp-10: 40px;
+
+  --pk-r-sm: 6px; --pk-r-md: 10px; --pk-r-lg: 14px; --pk-r-pill: 999px;
+
+  --pk-shadow-card: 0 1px 3px rgba(28,27,26,0.07);
+  --pk-shadow-pop:  0 8px 28px rgba(28,27,26,0.16);
+}
+
+/* ---------- Dark mode ---------- */
+[data-theme="dark"] {
+  --pk-brand:           #3BAAA7;
+  --pk-brand-strong:    #58BFBC;
+  --pk-brand-tint:      #12312F;
+
+  --pk-govt-pro:        #3E9E9C;
+  --pk-govt-lean-pro:   #2E615F;
+  --pk-govt-mixed:      #55524E;
+  --pk-govt-lean-crit:  #5C4168;
+  --pk-govt-crit:       #A876BC;
+
+  --pk-ideo-left:       #8B96DE;
+  --pk-ideo-lean-left:  #454C79;
+  --pk-ideo-center:     #55524E;
+  --pk-ideo-lean-right: #6E5636;
+  --pk-ideo-right:      #C99A5B;
+
+  --pk-fact-very-high:  #4CAF74;
+  --pk-fact-high:       #8DBB6E;
+  --pk-fact-mixed:      #D4B54A;
+  --pk-fact-low:        #D57F4B;
+  --pk-fact-very-low:   #D0604D;
+  --pk-fact-pending:    #6B6660;
+
+  --pk-blindspot-bg:    #E8E5E1;
+  --pk-blindspot-fg:    #17181B;
+
+  --pk-bg:              #141312;
+  --pk-surface:         #1E1C1B;
+  --pk-surface-2:       #262422;
+  --pk-border:          #2E2C2A;
+  --pk-border-strong:   #403D3A;
+  --pk-text:            #F2F0ED;
+  --pk-text-2:          #B5B0A9;
+  --pk-text-3:          #8A857E;
+
+  --pk-shadow-card: 0 1px 3px rgba(0,0,0,0.4);
+  --pk-shadow-pop:  0 8px 28px rgba(0,0,0,0.55);
+}

@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+web/.next/
+web/out/
+web/build/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Production
+dist/
+build/
+
+# Env / secrets
+.env
+.env*.local
+.env.local
+*.pem
+
+# Python
+worker/.venv/
+worker/__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Misc
+coverage/
+.turbo/

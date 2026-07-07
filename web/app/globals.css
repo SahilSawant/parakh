@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* Dark mode is driven by the [data-theme="dark"] attribute (design contract),
+   not the `dark:` media query. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---- Map the design tokens into Tailwind's theme ----
+   `inline` keeps the var() references live so the dark-mode overrides in
+   tokens.css apply at runtime. We never restate a hex here — only reference
+   --pk-* tokens. */
+@theme inline {
+  --color-canvas: var(--pk-bg);
+  --color-surface: var(--pk-surface);
+  --color-surface-2: var(--pk-surface-2);
+  --color-line: var(--pk-border);
+  --color-line-strong: var(--pk-border-strong);
+  --color-ink: var(--pk-text);
+  --color-ink-2: var(--pk-text-2);
+  --color-ink-3: var(--pk-text-3);
+  --color-brand: var(--pk-brand);
+  --color-brand-strong: var(--pk-brand-strong);
+  --color-brand-tint: var(--pk-brand-tint);
+
+  --font-sans: var(--pk-font-ui);
+  --font-dev: var(--pk-font-dev);
+  --font-mono: var(--pk-font-mono);
+
+  --radius-sm: var(--pk-r-sm);
+  --radius-md: var(--pk-r-md);
+  --radius-lg: var(--pk-r-lg);
+  --radius-pill: var(--pk-r-pill);
+
+  --shadow-card: var(--pk-shadow-card);
+  --shadow-pop: var(--pk-shadow-pop);
+}
+
+/* ---- Bind the self-hosted next/font families to the token names ----
+   tokens.css declares the *family names*; next/font (see layout.tsx) exposes
+   the self-hosted faces as CSS variables. We point the token vars at those
+   variables here so we honor the tokens without editing tokens.css. */
+:root {
+  --pk-font-ui: var(--font-noto-sans), system-ui, sans-serif;
+  --pk-font-dev: var(--font-noto-dev), var(--font-noto-sans), sans-serif;
+  --pk-font-mono: var(--font-noto-mono), ui-monospace, monospace;
+}
+
+html,
+body {
+  background: var(--pk-bg);
+  color: var(--pk-text);
+}
+
+body {
+  font-family: var(--pk-font-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Devanagari: same sizes, line-height +0.15, never letter-spaced (design rule). */
+.font-dev,
+:lang(hi),
+[lang="hi"] {
+  font-family: var(--pk-font-dev);
+  line-height: 1.7;
+  letter-spacing: normal;
+}
+
+/* Diagonal hatch for the two "lean" bias-bar segments — colorblind rule:
+   five buckets must be distinguishable without hue. */
+.pk-hatch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.35) 0 3px,
+    transparent 3px 7px
+  );
+}
+
+*:focus-visible {
+  outline: 2px solid var(--pk-brand);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
