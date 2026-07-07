@@ -1,10 +1,15 @@
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PARAKH_", env_file=".env", extra="ignore")
 
-    database_url: str = "postgres://postgres:postgres@localhost:5432/parakh"
+    # Accepts the conventional DATABASE_URL as well as PARAKH_DATABASE_URL.
+    database_url: str = Field(
+        "postgres://postgres:postgres@localhost:5432/parakh",
+        validation_alias=AliasChoices("PARAKH_DATABASE_URL", "DATABASE_URL"),
+    )
 
     # Ingestion cadence (design: cron every 10 min).
     fetch_interval_minutes: int = 10

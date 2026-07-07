@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Sample National Feed</title>
+    <link>https://example.org</link>
+    <description>Fixture feed for Parakh ingestion tests</description>
+
+    <item>
+      <title>Centre notifies data protection rules &amp; seeks industry input</title>
+      <link>https://example.org/story/data-rules?utm_source=rss&amp;utm_medium=feed</link>
+      <description><![CDATA[<p>The government <b>notified</b> the long-awaited rules on Friday. Industry bodies have sought a six-month transition window to comply, citing the scale of changes required across data-handling systems, consent flows, grievance redressal, and cross-border transfer obligations that many mid-sized firms are not yet equipped to meet in the current timeline.</p>]]></description>
+      <pubDate>Fri, 04 Jul 2026 09:30:00 GMT</pubDate>
+      <media:content url="https://example.org/img/data-rules.jpg" medium="image" />
+    </item>
+
+    <item>
+      <title>डेटा संरक्षण नियम अधिसूचित, उद्योग ने छह महीने का समय मांगा</title>
+      <link>https://example.org/story/data-rules-hi</link>
+      <description>सरकार ने शुक्रवार को नियम अधिसूचित किए।</description>
+      <pubDate>Fri, 04 Jul 2026 10:00:00 GMT</pubDate>
+    </item>
+
+    <!-- Duplicate of the first item's canonical URL (differs only by tracking params) -->
+    <item>
+      <title>Data rules notified (syndicated copy)</title>
+      <link>https://example.org/story/data-rules?utm_source=partner</link>
+      <description>Syndicated duplicate.</description>
+      <pubDate>Fri, 04 Jul 2026 11:00:00 GMT</pubDate>
+    </item>
+
+    <!-- Unusable: no link -> must be dropped -->
+    <item>
+      <title>Headline with no link</title>
+      <description>Should be skipped.</description>
+    </item>
+  </channel>
+</rss>

@@ -11,28 +11,38 @@ dependencies = [
   "apscheduler>=3.10",
   "pydantic>=2.9",
   "pydantic-settings>=2.5",
+  "psycopg[binary]>=3.2",
 ]
 
 [project.optional-dependencies]
 dev = [
   "ruff>=0.7",
+  "pytest>=8.3",
 ]
-# Heavy ML deps land in M1 (embedding spike): sentence-transformers, psycopg,
+# Heavy ML deps land in the next M1 slice (embedding spike): sentence-transformers,
 # pgvector, datasketch (MinHash), lingua-language-detector.
 ml = [
   "sentence-transformers>=3.0",
-  "psycopg[binary]>=3.2",
   "pgvector>=0.3",
   "datasketch>=1.6",
   "lingua-language-detector>=2.0",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "integration: requires a live Postgres (DATABASE_URL) — skipped by default",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+extend-exclude = ["tests/fixtures"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+# Keep `timezone.utc` (works on 3.9 for local dev) instead of the 3.11+ datetime.UTC alias.
+ignore = ["UP017"]
 
 [build-system]
 requires = ["setuptools>=68"]

@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.config import settings
-from app.scheduler import run_ingest_cycle
+from app.ingest import run_ingest_cycle
 
 logging.basicConfig(level=logging.INFO)
 
@@ -46,6 +46,6 @@ def health() -> dict[str, object]:
 
 
 @app.post("/ingest/run")
-def ingest_run() -> dict[str, int]:
-    """Trigger a single ingestion cycle on demand (M0: no-op stub cycle)."""
-    return run_ingest_cycle()
+def ingest_run(dry_run: bool = False, source: str | None = None) -> dict[str, object]:
+    """Trigger a single ingestion cycle on demand. dry_run skips DB writes."""
+    return run_ingest_cycle(only_slug=source, dry_run=dry_run)
