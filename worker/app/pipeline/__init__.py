@@ -13,11 +13,11 @@ Each stage is a pure-ish function over dataclasses so it is unit-testable. M0
 ships the shapes and the orchestration seam; the ML bodies land in M1.
 """
 
-from .fetch import fetch_all
-from .dedupe import dedupe
-from .langdetect import detect_language
-from .embed import embed
 from .cluster import cluster
+from .dedupe import dedupe
+from .embed import embed
+from .fetch import fetch_all
+from .langdetect import detect_language
 from .story_update import update_story_stats
 
 __all__ = [
