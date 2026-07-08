@@ -17,10 +17,11 @@ class Settings(BaseSettings):
     # Clustering knobs — tuned by the bilingual spike (docs/M1-embedding-spike.md).
     # Set "hash" to select the deterministic non-semantic embedder (tests/dev).
     embedding_model: str = "intfloat/multilingual-e5-large"  # or BAAI/bge-m3
-    # Tuned by the precision harness (docs/M1-precision.md), NOT the bilingual spike:
-    # on the full multi-story set, 0.85 over-merges (precision 0.29). The ≥85% gate
-    # is first met at 0.88 (precision 1.0, recall 0.82, F1 0.90 on the bootstrap set).
-    cluster_sim_threshold: float = 0.88
+    # Tuned on REAL ingested data (docs/M1-precision.md § Real data): max-F1 among
+    # gate-passing thresholds. precision 0.979, recall 0.575, F1 0.724 @ 0.86.
+    # (The authored bootstrap set wanted 0.88; real multi-outlet coverage is phrased
+    # more alike, so the operating point is lower. Recall/fragmentation is the real gap.)
+    cluster_sim_threshold: float = 0.86
     cluster_window_hours: int = 72
 
     # Bias-bar / blindspot gates (design rules).

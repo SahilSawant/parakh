@@ -100,10 +100,12 @@ def _print_sweep(model: str, rows: list[tuple[float, PairwiseScore]], gate: floa
         )
 
 
-def report(model: str, gate: float = DEFAULT_GATE, embedder=None) -> int:
+def report(
+    model: str, gate: float = DEFAULT_GATE, embedder=None, gold_path: Path = GOLD_PATH
+) -> int:
     from app.pipeline.embed import get_embedder
 
-    items = load_gold()
+    items = load_gold(gold_path)
     embedder = embedder or get_embedder(model)
     vectors = embed_gold(items, embedder)
 
@@ -159,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--model", default=None, help="model id (default: settings.embedding_model)")
     p.add_argument("--gate", type=float, default=DEFAULT_GATE, help="precision gate (default 0.85)")
     p.add_argument("--sweep", action="store_true", help="(default) print the threshold sweep")
+    p.add_argument("--gold", metavar="PATH", help="labelled gold JSONL (default: shipped set)")
     p.add_argument("--export-labeling", metavar="OUT", help="dump DB articles to label")
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -167,7 +170,8 @@ def main(argv: list[str] | None = None) -> int:
         return export_for_labeling(out=args.export_labeling)
 
     model = args.model or settings.embedding_model
-    return report(model, gate=args.gate)
+    gold_path = Path(args.gold) if args.gold else GOLD_PATH
+    return report(model, gate=args.gate, gold_path=gold_path)
 
 
 if __name__ == "__main__":

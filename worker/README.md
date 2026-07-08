@@ -54,21 +54,24 @@ Tests: `pytest -m "not integration"` (offline — MockTransport, RSS fixture, sy
 and `pytest -m integration` (real Postgres: upsert + pgvector clustering). Both run in CI.
 The ML model stays out of CI; clustering is exercised with `HashEmbedder`.
 
-**Precision harness built** (`app/eval/`, `docs/M1-precision.md`): pairwise
-precision/recall/F1 + threshold sweep over a 71-article / 21-story labelled set
-(bilingual, multi-outlet, hard-adjacent pairs). On e5-large the ≥85% gate is met at
-threshold **0.88** (precision 1.0, recall 0.82, F1 0.90) — which **corrected** the
-bilingual spike's 0.85 (that over-merges to precision 0.29). `cluster_sim_threshold`
-is now 0.88.
+**Precision harness + REAL-data run** (`app/eval/`, `docs/M1-precision.md`).
+Pairwise precision/recall/F1 + threshold sweep, run on **108 real articles** from 9
+live outlets (EN + हिंदी) labelled by same-event grouping into 74 stories / 14
+multi-outlet clusters (`gold_realset.jsonl`).
 
-## Still open (M1 gate — harness ready, not formally closed)
+- **Gate MET on real data: precision 0.979 @ threshold 0.86** (the lone "false
+  merge" is a labelling edge — LPG vs petrol daily-price briefs).
+- Real data tuned `cluster_sim_threshold` to **0.86** (the authored set wanted 0.88).
+- **Recall is the real gap:** ~57% pair recall; 8/14 multi-outlet stories fragment.
 
-- The shipped gold set is **authored**, not hand-labelled from live feeds. Run
-  `--export-labeling`, label ~100 real stories, and re-tune. Expect lower precision
-  on real data.
-- Consider a two-stage gate (SimHash pre-filter → vector confirm) for the sharp
-  0.87→0.88 precision cliff.
-- Nightly merge/split repair pass (recall safety net).
+## Still open (gate met on precision; not formally closed)
+
+- **Human-audit the labels** in `gold_realset.jsonl` (AI-assigned by event); scale
+  toward the full hand-labelled 100 across several news days.
+- **Recall/fragmentation** — the priority: nightly merge/split repair pass, two-stage
+  gate (SimHash pre-filter → vector confirm), title+snippet embedding.
+- Fix seed feeds that failed live: news18 (403 on our UA), dainik-jagran (404),
+  the-print (malformed RSS).
 - Claude Haiku neutral titles + EN/HI summaries; 48h coverage sparkline series.
 
 Tunable knobs (thresholds, intervals, model id) live in `app/config.py`.
