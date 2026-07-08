@@ -1,5 +1,12 @@
 # M1 — Hindi↔English embedding spike (concluded)
 
+> **⚠️ Threshold superseded.** This spike recommended ~0.85 from clean EN↔HI
+> translation pairs. The full **precision harness** (`docs/M1-precision.md`) later
+> showed 0.85 over-merges the multi-story case (precision 0.29); the operating
+> threshold is **0.88**. This doc's cross-lingual *viability* conclusion still
+> holds; its threshold number does not.
+
+
 **Question (work order §7, M1 gate):** does the multilingual embedding model place
 the *same story's* English and Hindi headlines close enough to cluster together,
 while keeping *different* stories apart? If not, we fall back to translating Hindi

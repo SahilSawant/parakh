@@ -25,6 +25,10 @@ python -m app.ingest --cluster
 # Bilingual embedding validation spike (see docs/M1-embedding-spike.md)
 python -m app.spike.bilingual_eval --model intfloat/multilingual-e5-large
 
+# Clustering precision harness — the M1 gate (see docs/M1-precision.md)
+python -m app.eval.run_precision --model intfloat/multilingual-e5-large
+python -m app.eval.run_precision --export-labeling to_label.jsonl   # build real gold set
+
 # Enable the 10-min scheduler
 PARAKH_ENABLE_SCHEDULER=1 uvicorn app.main:app
 ```
@@ -50,13 +54,21 @@ Tests: `pytest -m "not integration"` (offline — MockTransport, RSS fixture, sy
 and `pytest -m integration` (real Postgres: upsert + pgvector clustering). Both run in CI.
 The ML model stays out of CI; clustering is exercised with `HashEmbedder`.
 
-**Bilingual spike concluded** (`docs/M1-embedding-spike.md`): retrieval@1 = 100% on
-e5-small/large; threshold raised to **0.85** (0.82 caused false merges).
+**Precision harness built** (`app/eval/`, `docs/M1-precision.md`): pairwise
+precision/recall/F1 + threshold sweep over a 71-article / 21-story labelled set
+(bilingual, multi-outlet, hard-adjacent pairs). On e5-large the ≥85% gate is met at
+threshold **0.88** (precision 1.0, recall 0.82, F1 0.90) — which **corrected** the
+bilingual spike's 0.85 (that over-merges to precision 0.29). `cluster_sim_threshold`
+is now 0.88.
 
-## Still open (M1 gate)
+## Still open (M1 gate — harness ready, not formally closed)
 
-- ≥85% precision on 100 hand-labelled stories (validate on live clusters, tune threshold).
-- Nightly merge/split repair pass.
+- The shipped gold set is **authored**, not hand-labelled from live feeds. Run
+  `--export-labeling`, label ~100 real stories, and re-tune. Expect lower precision
+  on real data.
+- Consider a two-stage gate (SimHash pre-filter → vector confirm) for the sharp
+  0.87→0.88 precision cliff.
+- Nightly merge/split repair pass (recall safety net).
 - Claude Haiku neutral titles + EN/HI summaries; 48h coverage sparkline series.
 
 Tunable knobs (thresholds, intervals, model id) live in `app/config.py`.
