@@ -42,3 +42,5 @@ npm-debug.log*
 # Misc
 coverage/
 .turbo/
+
+NEON_DATABASE_URL=postgresql://neondb_owner:npg_tIX7dUSksbo0@ep-sweet-hill-aon6mgvt-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
