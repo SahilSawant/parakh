@@ -88,14 +88,50 @@ def run_ingest_cycle(only_slug: str | None = None, dry_run: bool = False) -> dic
     }
 
 
+def run_cluster_pass(embedder=None) -> dict[str, int]:
+    """
+    Embed any unembedded articles, then run the incremental clustering pass over
+    pgvector. Separate from the fetch cycle because it loads the ML model; ops runs
+    it after ingestion (or on its own cadence). `embedder` is injectable for tests.
+    """
+    from app.config import settings
+    from app.db import (
+        cluster_pending_articles,
+        connect,
+        load_unembedded_articles,
+        set_article_embedding,
+    )
+    from app.pipeline.embed import embed as embed_articles
+    from app.pipeline.embed import get_embedder
+
+    with connect() as conn:
+        rows = load_unembedded_articles(conn)
+        if rows:
+            embedder = embedder or get_embedder()
+            embedded = embed_articles([ra for _, ra in rows], embedder=embedder)
+            for (article_id, _), emb in zip(rows, embedded):
+                set_article_embedding(conn, article_id, emb.embedding, emb.simhash)
+        stats = cluster_pending_articles(
+            conn, settings.cluster_sim_threshold, settings.cluster_window_hours
+        )
+    stats["embedded"] = len(rows)
+    log.info("cluster pass: %s", stats)
+    return stats
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="app.ingest", description="Parakh RSS ingestion")
     p.add_argument("--dry-run", action="store_true", help="fetch + parse but skip DB writes")
     p.add_argument("--source", metavar="SLUG", help="ingest only this source slug")
     p.add_argument("--show", type=int, default=0, metavar="N", help="print N sample articles")
+    p.add_argument("--cluster", action="store_true", help="embed + cluster unclustered articles")
     args = p.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+
+    if args.cluster:
+        print(run_cluster_pass())
+        return 0
 
     if args.dry_run and args.show:
         sources = resolve_sources(args.source, allow_demo=True)

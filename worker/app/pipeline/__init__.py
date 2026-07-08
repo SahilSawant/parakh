@@ -3,28 +3,38 @@ Ingestion pipeline (design §4):
 
     cron (every 10 min)
      └─ FETCH   : RSS all sources -> normalize
-     └─ DEDUPE  : URL canonicalization -> MinHash/SimHash on title+snippet
-     └─ LANG    : fasttext / lingua
-     └─ EMBED   : multilingual-e5 on title+snippet(+lead paras transiently)
-     └─ CLUSTER : ANN (pgvector cosine) vs last 72h; sim >= ~0.82 -> attach, else new
-     └─ STORY   : per-story stats, blindspot flags, AI title/summary, sparkline
+     └─ DEDUPE  : URL canonicalization -> SimHash on title+snippet
+     └─ LANG    : Devanagari heuristic (lingua in a later slice)
+     └─ EMBED   : multilingual-e5 on title+snippet -> VECTOR(1024)
+     └─ CLUSTER : cosine >= ~0.82 vs last 72h -> attach, else new story
+     └─ STORY   : per-story stats, distributions, blindspot flags
 
-Each stage is a pure-ish function over dataclasses so it is unit-testable. M0
-ships the shapes and the orchestration seam; the ML bodies land in M1.
+FETCH/DEDUPE/LANG/EMBED are live; CLUSTER/STORY have pure reference
+implementations here and DB-backed orchestration in app/db.py + app/ingest.py.
 """
 
-from .cluster import cluster
-from .dedupe import dedupe
-from .embed import embed
+from .cluster import Assignment, cosine, incremental_cluster, nearest
+from .dedupe import canonicalize_url, dedupe, hamming, simhash64
+from .embed import EMBED_DIM, embed, get_embedder
 from .fetch import fetch_all
 from .langdetect import detect_language
-from .story_update import update_story_stats
+from .story_update import compute_blindspot, compute_distribution, story_stats
 
 __all__ = [
     "fetch_all",
     "dedupe",
+    "canonicalize_url",
+    "simhash64",
+    "hamming",
     "detect_language",
     "embed",
-    "cluster",
-    "update_story_stats",
+    "get_embedder",
+    "EMBED_DIM",
+    "cosine",
+    "nearest",
+    "incremental_cluster",
+    "Assignment",
+    "compute_distribution",
+    "compute_blindspot",
+    "story_stats",
 ]

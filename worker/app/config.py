@@ -14,9 +14,11 @@ class Settings(BaseSettings):
     # Ingestion cadence (design: cron every 10 min).
     fetch_interval_minutes: int = 10
 
-    # Clustering knobs — tune on real data (M1 -> M3).
+    # Clustering knobs — tuned by the bilingual spike (docs/M1-embedding-spike.md).
+    # Set "hash" to select the deterministic non-semantic embedder (tests/dev).
     embedding_model: str = "intfloat/multilingual-e5-large"  # or BAAI/bge-m3
-    cluster_sim_threshold: float = 0.82
+    # e5 compresses cosine sims into a high band (neg max ≈ 0.83); 0.82 is too low.
+    cluster_sim_threshold: float = 0.85
     cluster_window_hours: int = 72
 
     # Bias-bar / blindspot gates (design rules).
