@@ -1,4 +1,4 @@
-# Parakh (परख) — Ground News for India
+# Parakh (परख) — Unbiased News for India
 
 > "To assay." Reader-funded news-coverage transparency. **No ads. No grants. No owner.**
 
